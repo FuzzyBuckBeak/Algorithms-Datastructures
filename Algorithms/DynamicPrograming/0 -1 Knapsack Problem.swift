@@ -10,7 +10,7 @@ import Foundation
 
 //Bottom up approach for knapsack problem
 class Knapsack {
-    func solution(weights: [Int], values: [Int], capacity: Int) -> Int {
+    func solution(weights: [Int], values: [Int], capacity: Int, printItems: Bool = true) -> Int {
         guard weights.count == values.count else { return -1 }
         // create a two dimensional array to hold the values
         //for the sample example:
@@ -71,6 +71,24 @@ class Knapsack {
                     arr[i][j] = arr[i-1][j]
                 }
             }
+        }
+        
+        if printItems {
+            var res = arr[weights.count][capacity]
+            var kCapacity = capacity
+            print("------Items in Knapsack that was chosen--------")
+            for i in stride(from: weights.count, to: 0, by: -1) {
+                if res <= 0 { break }
+                if res == arr[i-1][kCapacity] { continue }
+                else {
+                    print("\(weights[i - 1])lbs")
+                    res = res - values[i - 1]
+                    kCapacity = kCapacity - weights[i - 1]
+                }
+            }
+            print("-----------------------------------------------")
+            print("Total Value of Knapsack: $\(arr[weights.count][capacity]) ")
+            print("-----------------------------------------------")
         }
         
         //return the last row/cloumn combination for the final answer.
