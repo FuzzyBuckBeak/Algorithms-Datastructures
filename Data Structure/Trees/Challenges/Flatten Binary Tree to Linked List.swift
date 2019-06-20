@@ -55,27 +55,18 @@ class BinaryTree {
         var result: [TreeNode?] = []
         inorderTraversal(root: root, result: &result)
         
-        root?.left = nil
-        root?.right = nil
-       
-        var element: TreeNode?
-        let resultcount = result.count - 1
-        
-        if resultcount >= 1 {
-            if let value = result[1]  { element = value }
-            root?.right = element
-            
-            for i in 2 ..< result.count {
-                element?.left = nil
-                element?.right = result[i]
-                element = result[i]
-            }
+        for i in 0 ..< result.count {
+            let next = i + 1
+            guard next < result.count else { return }
+            let node = result[i]
+            node?.left = nil
+            node?.right = result[next]
         }
     }
     
     func inorderTraversal(root: TreeNode?, result: inout [TreeNode?]) {
         if root == nil { return }
-         result.append(root)
+        result.append(root)
         inorderTraversal(root: root?.left, result: &result)
         inorderTraversal(root: root?.right, result: &result)
     }
