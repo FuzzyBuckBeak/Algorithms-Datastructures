@@ -26,15 +26,9 @@ class Knapsack {
          70   3     0
          30   4     0
          
-         if we have a knapsack of capacity 0, we cannot add any item to cart, hence the value it can hold is 0
-         therefore the first column is Zero
-         
-         if we have an item of Zero weight, its equivalent of having no item, hence the value of non item is 0
-         therefore the first row is Zero.
-         
-         These are our base conditions.*/
+         */
         
-        var arr = Array(repeating: (Array(repeating: 0, count: capacity + 1)), count: weights.count)
+        var arr = Array(repeating: (Array(repeating: 0, count: capacity + 1)), count: weights.count + 1)
         
         /*The above mentioned conditions are met when we created the array.
         
@@ -50,18 +44,25 @@ class Knapsack {
         
         
         //we loop through all the possible weights
-        for i in 1 ..< weights.count {
+        for i in 0 ... weights.count {
             
             // possible capacity of knapsack
-            for j in 1 ... capacity {
+            for j in 0 ... capacity {
+                /* if we have a knapsack of capacity 0, we cannot add any item to cart, hence the value it can hold is 0
+                 therefore the first column is Zero
+                 
+                 if we have an item of Zero weight, its equivalent of having no item, hence the value of non item is 0
+                 therefore the first row is Zero.
+                 
+                 These are our base conditions. */
+                if (i == 0 || j == 0) { continue }
                 
                 //if weight of an item is smaller than the knapsack, we consider to include it
-                if weights[i] <= j {
-                    
+                if weights[i-1] <= j {
                     //we check for maximum of the item; if value of newly inlcuded value is greater than the item that was already included.
                     //if we are including newly considered item, does it leave any space in the knapsack?
                     //if it does, we consider the previous item for the remaining knapsack capacity
-                    arr[i][j] = max(arr[i-1][j], values[i] + arr[i-1][j - weights[i]])
+                    arr[i][j] = max(arr[i-1][j], values[i - 1] + arr[i-1][j - weights[i - 1]])
                 } else {
                     
                     // if the weight of the item is greater than the capacity of knapsack, we dont include the new item,
@@ -73,6 +74,7 @@ class Knapsack {
         }
         
         //return the last row/cloumn combination for the final answer.
-        return arr[weights.count - 1][capacity]
+        return arr[weights.count][capacity]
     }
+    
 }
