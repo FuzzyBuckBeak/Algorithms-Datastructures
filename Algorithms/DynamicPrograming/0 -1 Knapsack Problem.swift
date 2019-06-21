@@ -79,10 +79,19 @@ class Knapsack {
             print("------Items in Knapsack that was chosen--------")
             for i in stride(from: weights.count, to: 0, by: -1) {
                 if res <= 0 { break }
+                // if the item on the column above is the same as the present, this means
+                // The value of present item was picked from the previous column
+                // The value that is seen here is from previous item
+                // This item did not make to the end list
                 if res == arr[i-1][kCapacity] { continue }
                 else {
+                    // If not, this item has made to the end list
                     print("\(weights[i - 1])lbs")
+                    
+                    // remaining value is the res - current item
                     res = res - values[i - 1]
+                    
+                    // remaining weight is the totalKnapSackweight - currentItemWeight
                     kCapacity = kCapacity - weights[i - 1]
                 }
             }
