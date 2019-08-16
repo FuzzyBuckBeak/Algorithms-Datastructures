@@ -11,22 +11,26 @@ import Foundation
 
 class NQueens {
     
-    var q: [[Bool]] = [[]]
+    var q: [[String]] = [[]]
     func solution(n: Int) {
-        q = Array(repeating: Array(repeating: false, count: n), count: n)
-        solution(col: 0, n: n)
+        var result: [[String]] = []
+        q = Array(repeating: Array(repeating: ".", count: n), count: n)
+        solution(col: 0, n: n, result: &result)
+        print(result)
     }
     
     @discardableResult
-    private func solution(col: Int, n: Int) -> Bool {
-        if col == n { print(q)}
+    private func solution(col: Int, n: Int, result: inout [[String]]) -> Bool {
+        if col == n {
+            print(result.append(q.map { $0.joined() }))
+        }
         else {
             for row in 0 ..< n {
                 if canPlace(row: row, col: col, n: n) {
-                    q[row][col] = true
+                    q[row][col] = "Q"
                     
-                    if solution(col: col + 1, n: n) { return true }
-                    q[row][col] = false
+                    if solution(col: col + 1, n: n, result: &result) { return true }
+                    q[row][col] = "."
                     
                 }
             }
@@ -39,7 +43,7 @@ class NQueens {
         
         //Check for row
         for i in 0 ..< n {
-            if (q[row][i]) { return false }
+            if (q[row][i] == "Q") { return false }
         }
         
         //Check for daigonal
@@ -47,7 +51,7 @@ class NQueens {
         var j = col
         
         while j >= 0 && i >= 0 {
-            if q[i][j] { return false }
+            if q[i][j] == "Q" { return false }
             j -= 1
             i -= 1
         }
@@ -56,7 +60,7 @@ class NQueens {
         i = row
         j = col
         while j >= 0 && i < n {
-            if q[i][j]  { return false }
+            if q[i][j] == "Q"  { return false }
             i += 1
             j -= 1
         }
