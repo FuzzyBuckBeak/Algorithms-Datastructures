@@ -63,3 +63,17 @@ class BinaryTree {
         stack.removeLast()
     }
 }
+
+//Easier and better than the previous answer
+class Tree {
+   func printRootToLeaf(root: TreeNode?, path: String = "") {
+        if root == nil { return }
+        if root?.left == nil && root?.right == nil { print(_path(path, String(root!.value))); return }
+        printRootToLeaf(root: root?.left, path: _path(path, String(root!.value)))
+        printRootToLeaf(root: root?.right, path: _path(path, String(root!.value)))
+    }
+ 
+   private func _path(_ originalPath: String, _ additionalPath: String) -> String {
+        return originalPath.isEmpty ? additionalPath : originalPath + "->" + additionalPath
+   }
+}
