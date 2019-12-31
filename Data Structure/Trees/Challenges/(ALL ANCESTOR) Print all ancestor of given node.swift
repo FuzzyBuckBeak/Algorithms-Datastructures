@@ -48,3 +48,17 @@ class BinaryTree {
         return false
     }
 }
+
+//Easier and better than previous version
+class Tree {
+    func printAncestors(root: TreeNode?, target: Int, path: String = "") {
+        if root == nil { return }
+        if root?.value == target { print(path)}
+        printAncestors(root: root?.left, target: target, path: _path(path, String(root!.value)))
+        printAncestors(root: root?.right, target: target, path: _path(path, String(root!.value)))
+    }
+    
+    private func _path(_ originalPath: String, _ additionalPath: String) -> String {
+        return originalPath.isEmpty ? additionalPath : originalPath + "->" + additionalPath
+    }   
+}
