@@ -57,6 +57,34 @@ class BinaryTree {
             print(value.count > 0 ? value[0] : "NA")
         }
     }
+    
+    
+    //1. Perform preorder traversal of binary tree with modification - hash to hold levels (left -1 and right +1)
+    //2. sort the hash by keys
+    //3. get the first element of value for all the keys in hash
+    //Easier solution
+    func verticalOrderTraversal(root: TreeNode) {
+        var hash: [Int: [Int]] = [:]
+        private_vot(root: root, count: 0, hash: &hash)
+        
+        for key in hash.keys.sorted(by: <) {
+            let value = hash[key]!
+            print(value[0])
+        }
+    }
+    
+    //handler
+    func private_vot(root: TreeNode?, count: Int, hash : inout [Int: [Int]]) {
+        if root == nil { return }
+       
+        if let _ = hash[count] {
+            hash[count]!.append(root!.value)
+        } else {
+            hash[count] = [root!.value]
+        }
+        private_vot(root: root?.left, count: count - 1, hash: &hash)
+        private_vot(root: root?.right, count: count + 1, hash: &hash)
+    }
 
    
 }
