@@ -58,5 +58,28 @@ class BinaryTree {
         }
     }
 
+    //Easier solution
+    func verticalOrderTraversal(root: TreeNode) {
+        var hash: [Int: [Int]] = [:]
+        private_vot(root: root, count: 0, hash: &hash)
+        
+        for key in hash.keys.sorted(by: <) {
+            let value = hash[key]!
+            print(value[value.count - 1])
+        }
+    }
+    
+    //handler
+    func private_vot(root: TreeNode?, count: Int, hash : inout [Int: [Int]]) {
+        if root == nil { return }
+       
+        if let _ = hash[count] {
+            hash[count]!.append(root!.value)
+        } else {
+            hash[count] = [root!.value]
+        }
+        private_vot(root: root?.left, count: count - 1, hash: &hash)
+        private_vot(root: root?.right, count: count + 1, hash: &hash)
+    }
    
 }
