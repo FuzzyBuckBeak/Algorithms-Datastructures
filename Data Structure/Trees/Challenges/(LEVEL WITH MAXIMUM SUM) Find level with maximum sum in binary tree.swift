@@ -57,4 +57,28 @@ class BinaryTree {
         }
         return result.level
     }
+    
+    
+    
+    //Another version of question - Find Max level sum.
+     func maxLevelSum(root: TreeNode) -> Int {
+        var queue: [TreeNode] = []
+        queue.append(root)
+        var maxSum: Int = 0
+        while !queue.isEmpty {
+            var count = queue.count - 1
+            let levelSum = queue.reduce(0) { $0 + $1.value }
+            
+            while count >= 0 {
+                let node = queue.removeFirst()
+                if let left = node.left { queue.append(left) }
+                if let right = node.right { queue.append(right) }
+                count -= 1
+            }
+            maxSum = max(maxSum, levelSum)
+        }
+        
+        print("maxSum - \(maxSum)")
+        return maxSum
+    }
 }
