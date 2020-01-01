@@ -58,6 +58,9 @@ class BinaryTree {
         }
     }
 
+    //1. Perform preorder traversal of binary tree with modification - hash to hold levels (left -1 and right +1)
+    //2. sort the hash by keys
+    //3. get the last element of value for all the keys in hash
     //Easier solution
     func verticalOrderTraversal(root: TreeNode) {
         var hash: [Int: [Int]] = [:]
