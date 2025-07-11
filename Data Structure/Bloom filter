@@ -1,0 +1,81 @@
+import Foundation
+
+// MARK: - String Extension for Secondary Hash
+extension String {
+    /// Simple secondary hash using djb2 algorithm variant
+    func simpleSecondaryHash() -> Int {
+        var hash = 5381
+        for byte in self.utf8 {
+            hash = ((hash << 5) &+ hash) &+ Int(byte)
+        }
+        return abs(hash)
+    }
+}
+
+// MARK: - Bloom Filter Class
+class BloomFilter {
+    let m: Int           // Number of bits
+    let k: Int           // Number of hash functions
+    var bitArray: [Bool] // Bit array
+
+    /// Initialize Bloom Filter
+    init(numItems n: Int, falsePositiveRate p: Double) {
+        // Calculate m (number of bits)
+        let ln2 = log(2.0)
+        let mFloat = -(Double(n) * log(p)) / (ln2 * ln2)
+        self.m = Int(ceil(mFloat))
+
+        // Calculate k (number of hash functions)
+        let kFloat = (Double(m) / Double(n)) * ln2
+        self.k = Int(round(kFloat))
+
+        // Initialize bit array
+        self.bitArray = Array(repeating: false, count: m)
+
+        print("Initialized Bloom Filter with m = \(m), k = \(k)")
+    }
+
+    /// Get k hash indices using double hashing
+    private func getHashIndices(for item: String) -> [Int] {
+        let h1 = item.hashValue        // WARNING: Not stable across runs/architectures
+        let h2 = item.simpleSecondaryHash() // Simple secondary hash
+
+        var indices: [Int] = []
+        for i in 0..<k {
+            let combinedHash = (h1 + i * h2)
+            let index = (combinedHash % m + m) % m // Ensure positive modulo
+            indices.append(index)
+        }
+        return indices
+    }
+
+    /// Add item to Bloom Filter
+    func add(_ item: String) {
+        let indices = getHashIndices(for: item)
+        for index in indices {
+            bitArray[index] = true
+        }
+    }
+
+    /// Check if item might be in Bloom Filter
+    func contains(_ item: String) -> Bool {
+        let indices = getHashIndices(for: item)
+        for index in indices {
+            if !bitArray[index] {
+                return false // Definitely not present
+            }
+        }
+        return true // Might be present
+    }
+}
+
+
+let bloom = BloomFilter(numItems: 1000, falsePositiveRate: 0.01)
+
+bloom.add("apple")
+bloom.add("banana")
+bloom.add("cherry")
+
+print(bloom.contains("apple"))   // true (probably)
+print(bloom.contains("banana"))  // true (probably)
+print(bloom.contains("grape"))   // false (definitely not)
